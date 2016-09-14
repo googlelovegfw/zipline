@@ -24,7 +24,6 @@ import pandas as pd
 from zipline._protocol import handle_non_market_minutes
 
 from zipline.data.data_portal import DataPortal
-from zipline.protocol import BarData
 from zipline.finance.restrictions import (
     Restriction,
     InMemoryRestrictions,

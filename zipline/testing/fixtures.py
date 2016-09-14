@@ -36,8 +36,10 @@ from ..utils.classproperty import classproperty
 from ..utils.final import FinalMeta, final
 from .core import tmp_asset_finder, make_simple_equity_info
 from zipline.assets import Equity, Future
+from zipline.finance.restrictions import NoopRestrictions
 from zipline.pipeline import SimplePipelineEngine
 from zipline.pipeline.loaders.testing import make_seeded_random_loader
+from zipline.protocol import BarData
 from zipline.utils.calendars import (
     get_calendar,
     register_calendar)
@@ -1318,4 +1320,22 @@ class WithResponses(object):
         super(WithResponses, self).init_instance_fixtures()
         self.responses = self.enter_instance_context(
             responses.RequestsMock(),
+        )
+
+
+class WithCreateBarData(WithDataPortal, WithTradingCalendars):
+
+    def create_bardata(self, simulation_dt_func, **kwargs):
+        data_portal = kwargs.get('data_portal', self.data_portal)
+        data_frequency = kwargs.get('data_frequency', 'minute')
+        trading_calendar = kwargs.get('trading_calendar',
+                                      self.trading_calendar)
+        restrictions = kwargs.get('restrictions', NoopRestrictions())
+
+        return BarData(
+            data_portal,
+            simulation_dt_func,
+            data_frequency,
+            trading_calendar,
+            restrictions
         )

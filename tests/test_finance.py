@@ -37,12 +37,12 @@ from zipline.data.minute_bars import BcolzMinuteBarReader
 from zipline.data.data_portal import DataPortal
 from zipline.data.us_equity_pricing import BcolzDailyBarWriter
 from zipline.finance.slippage import FixedSlippage
-from zipline.protocol import BarData
 from zipline.testing import (
     tmp_trading_env,
     write_bcolz_minute_data,
 )
 from zipline.testing.fixtures import (
+    WithCreateBarData,
     WithLogger,
     WithTradingEnvironment,
     ZiplineTestCase,
@@ -56,7 +56,8 @@ EXTENDED_TIMEOUT = 90
 _multiprocess_can_split_ = False
 
 
-class FinanceTestCase(WithLogger,
+class FinanceTestCase(WithCreateBarData,
+                      WithLogger,
                       WithTradingEnvironment,
                       ZiplineTestCase):
     ASSET_FINDER_EQUITY_SIDS = 1, 2, 133
@@ -316,11 +317,10 @@ class FinanceTestCase(WithLogger,
                             order_date = order_date + timedelta(days=1)
                             order_date = order_date.replace(hour=14, minute=30)
                 else:
-                    bar_data = BarData(
-                        data_portal,
-                        lambda: tick,
-                        sim_params.data_frequency,
-                        self.trading_calendar
+                    bar_data = self.create_bardata(
+                        data_portal=data_portal,
+                        simulation_dt_func=lambda: tick,
+                        data_frequency=sim_params.data_frequency,
                     )
                     txns, _, closed_orders = blotter.get_transactions(bar_data)
                     for txn in txns:
