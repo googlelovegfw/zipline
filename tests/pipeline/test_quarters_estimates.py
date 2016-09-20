@@ -581,11 +581,13 @@ class NextEstimateMultipleQuarters(
     def fill_expected_out(cls, expected):
         # Fill columns for 1 Q out
         for raw_name in cls.columns.values():
-            expected[raw_name + '1'].loc[
-                pd.Timestamp('2015-01-01'):pd.Timestamp('2015-01-11')
+            expected.loc[
+                pd.Timestamp('2015-01-01'):pd.Timestamp('2015-01-11'),
+                raw_name + '1'
             ] = cls.events[raw_name].iloc[0]
-            expected[raw_name + '1'].loc[
-                pd.Timestamp('2015-01-11'):pd.Timestamp('2015-01-20')
+            expected.loc[
+                pd.Timestamp('2015-01-11'):pd.Timestamp('2015-01-20'),
+                raw_name + '1'
             ] = cls.events[raw_name].iloc[1]
 
         # Fill columns for 2 Q out
@@ -593,19 +595,23 @@ class NextEstimateMultipleQuarters(
         # Q1's event happens; after Q1's event, we know 1 Q out but not 2 Qs
         # out.
         for col_name in ['estimate', 'event_date']:
-            expected[col_name + '2'].loc[
-                pd.Timestamp('2015-01-06'):pd.Timestamp('2015-01-10')
+            expected.loc[
+                pd.Timestamp('2015-01-06'):pd.Timestamp('2015-01-10'),
+                col_name + '2'
             ] = cls.events[col_name].iloc[1]
         # But we know what FQ and FY we'd need in both Q1 and Q2
         # because we know which FQ is next and can calculate from there
-        expected[FISCAL_QUARTER_FIELD_NAME + '2'].loc[
-            pd.Timestamp('2015-01-01'):pd.Timestamp('2015-01-09')
+        expected.loc[
+            pd.Timestamp('2015-01-01'):pd.Timestamp('2015-01-09'),
+            FISCAL_QUARTER_FIELD_NAME + '2'
         ] = 2
-        expected[FISCAL_QUARTER_FIELD_NAME + '2'].loc[
-            pd.Timestamp('2015-01-12'):pd.Timestamp('2015-01-20')
+        expected.loc[
+            pd.Timestamp('2015-01-12'):pd.Timestamp('2015-01-20'),
+            FISCAL_QUARTER_FIELD_NAME + '2'
         ] = 3
-        expected[FISCAL_YEAR_FIELD_NAME + '2'].loc[
-            pd.Timestamp('2015-01-01'):pd.Timestamp('2015-01-20')
+        expected.loc[
+            pd.Timestamp('2015-01-01'):pd.Timestamp('2015-01-20'),
+            FISCAL_YEAR_FIELD_NAME + '2'
         ] = 2015
 
         return expected
