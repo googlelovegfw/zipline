@@ -664,8 +664,8 @@ class WithVaryingNumEstimates(WithEstimates):
     have the correct overwrites when the event date changes. We want to make
     sure that if we have a quarter with an event date that gets pushed back,
     we don't start overwriting for the next quarter early. Likewise,
-    if we have a quarter with an event date that gets pushed forward, we want to
-    make sure that we start applying adjustments at the appropriate, earlier
+    if we have a quarter with an event date that gets pushed forward, we want
+    to make sure that we start applying adjustments at the appropriate, earlier
     date, rather than the later date.
 
     Methods
@@ -679,7 +679,7 @@ class WithVaryingNumEstimates(WithEstimates):
     test_windows_with_varying_num_estimates()
         Tests that we create the correct overwrites from 2015-01-13 to
         2015-01-14 regardless of how event dates were updated for each
-        quarter for each sid. 
+        quarter for each sid.
     """
 
     @classmethod
